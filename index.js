@@ -68,7 +68,7 @@ function sendNotification(title, body) {
 }
 
 function searchSeed(info) {
-    exec(`rng-reporter-searcher -${info.gen} --${info.DPPt?"dppt":"hgss"} --months ${info.months} --delay ${info.delay} --seconds ${info.seconds} --days ${info.days} --hours ${info.hours} --minutes ${info.minutes}`,
+    exec(`rng-reporter-searcher --g${info.gen} --${info.DPPt?"dppt":"hgss"} --months ${info.months} --delay ${info.delay} --seconds ${info.seconds} --days ${info.days} --hours ${info.hours} --minutes ${info.minutes} --tid ${info.tid} --sid ${info.sid}`,
       (err, response, stderr) => {
         if (err || stderr)
             return dialog.showErrorBox("Error", err?.toString() || stderr);
