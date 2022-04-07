@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <fieldset>
+            <legend>Gens</legend>
+            <div style="width: 50%; height: 100%;">
+                <button onclick="createWindow('gen4.ejs')">Gen4 Seed Search</button>
+                <!--<button onclick="createWindow('gen5.ejs')">Gen5 Seed Search</button>-->
+            </div>
+        </fieldset>
+        <footer>
+            <div style="text-align: right; bottom: 0;">
+                <p>App Version: V<%= appVersion %><br/>
+                    Searcher Version: <%= searcherVersion %></p>
+            </div>
+        </footer>
+
+        <script defer src="./js/scripts.js"></script>
+    </body>
+</html>

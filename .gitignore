@@ -1,0 +1,6 @@
+package-lock.json
+node_modules/
+.git/
+build*/
+dist*/
+rng-reporter-searcher*

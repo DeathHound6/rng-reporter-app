@@ -1,0 +1,33 @@
+{
+  "name": "rng-reporter-app",
+  "version": "1.0.0",
+  "description": "A GUI app made in Node.Js for Pokemon RNG Report searching",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build-windows": "node build-windows.js",
+    "build-mac": "node build-mac.js",
+    "build-debian": "node build-debian.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeathHound6/rng-reporter-app.git"
+  },
+  "author": "DeathHound6",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DeathHound6/rng-reporter-app/issues"
+  },
+  "homepage": "https://github.com/DeathHound6/rng-reporter-app#readme",
+  "devDependencies": {
+    "electron": "^17.4.0",
+    "electron-installer-debian": "^3.1.0",
+    "electron-installer-dmg": "^3.0.0",
+    "electron-installer-windows": "^3.0.0",
+    "electron-packager": "^15.4.0"
+  },
+  "dependencies": {
+    "ejs-electron": "^2.1.1",
+    "update-electron-app": "^2.0.1"
+  }
+}

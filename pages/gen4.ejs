@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .row-3 {
+                --columnCount: 3;
+            }
+            .row {
+                width: 100%;
+                display: flex;
+                column-count: var(--columnCount);
+                column-width: calc(100% / var(--columnCount));
+            }
+            .column {
+                width: calc(100% / var(--columnCount));
+                display: block;
+                align-items: center;
+            }
+            input[type="number"] {
+                width: 100%;
+            }
+            button {
+                margin-left: 30%;
+                margin-right: 30%;
+                margin-top: 20%;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="#" onclick="createWindow('index.ejs');">Retuen to Menu</a>
+        <br/>
+        <div class="row-3 row">
+            <div class="column">
+                <fieldset>
+                    <legend>Months</legend>
+                    <label>Min Months</label> <input type="number" min="1" max="12" value="1" id="min-months" required>
+                    <br/>
+                    <label>Max Months</label> <input type="number" min="1" max="12" value="1" id="max-months" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Days</legend>
+                    <label>Min Days</label> <input type="number" min="1" max="31" value="1" id="min-days" required>
+                    <br/>
+                    <label>Max Days</label> <input type="number" min="1" max="31" value="1" id="max-days" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Delay</legend>
+                    <label>Min Delay</label> <input type="number" min="1" value="0" id="min-delay" required>
+                    <br/>
+                    <label>Max Delay</label> <input type="number" min="0" value="0" id="max-delay" required>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="column">
+                <fieldset>
+                    <legend>Hours</legend>
+                    <label>Min Hours</label> <input type="number" min="0" max="23" value="0" id="min-hrs" required>
+                    <br/>
+                    <label>Max Hours</label> <input type="number" min="0" max="23" value="0" id="max-hrs" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Minutes</legend>
+                    <label>Min Minutes</label> <input type="number" min="0" max="59" value="0" id="min-mins" required>
+                    <br/>
+                    <label>Max Minutes</label> <input type="number" min="0" max="59" value="0" id="max-mins" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Seconds</legend>
+                    <label>Min Seconds</label> <input type="number" min="0" max="59" value="0" id="min-secs" required>
+                    <br/>
+                    <label>Max Seconds</label> <input type="number" min="0" max="59" value="0" id="max-secs" required>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="column">
+                <fieldset>
+                    <legend>Tid</legend>
+                    <label>Tid</label> <input type="number" min="0" value="0" id="tid" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Sid</legend>
+                    <label>Sid</label> <input type="number" min="0" value="0" id="sid" required>
+                </fieldset>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>DPPt/HGSS</legend>
+                    <input type="radio" name="dppt/hgss" id="DPPt">
+                    <label for="DPPt">DPPt</label>
+                    <br/>
+                    <input type="radio" name="dppt/hgss" id="HGSS">
+                    <label for="HGSS">HGSS</label>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="column"></div>
+            <div class="column">
+                <fieldset>
+                    <legend>CPU Cores</legend>
+                    <label>CPU Cores</label> <input type="number" min="1" max="16" value="1" id="cores" required>
+                </fieldset>
+            </div>
+            <div class="column"></div>
+        </div>
+        <div class="row row-3">
+            <div class="column">
+                <button type="button" onclick="addMethod1();">Add Method 1</button>
+            </div>
+            <div class="column">
+                <button type="button" onclick="addMethodJ();">Add Method J</button>
+            </div>
+            <div class="column">
+                <button type="button" onclick="addPKRS();">Add PKRS</button>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="column"></div>
+            <div class="column">
+                <button type="submit" onclick="search();">Start Search</button>
+            </div>
+            <div class="column"></div>
+        </div>
+
+        <script defer src="./js/scripts.js"></script>
+        <script defer>
+            // HANDLE HTML EVENTS
+            function search() {
+                // Pre search checks
+                const DPPt = document.getElementById("DPPt").checked;
+                const HGSS = document.getElementById("HGSS").checked;
+                if (!DPPt && !HGSS)
+                    return alert("Either DPPt or HGSS must be selected.");
+                const cores = parseInt(document.getElementById("cores").value);
+                if (1 > cores > 16)
+                    return alert("CPU Cores must be between 1 and 16.");
+                const minmonths = parseInt(document.getElementById("min-months").value);
+                const maxmonths = parseInt(document.getElementById("max-months").value);
+                if (minmonths > maxmonths || minmonths < 1 || maxmonths > 12)
+                    return alert("Min Months must be less than or equal to Max Months. Months must also be between 1 and 12.");
+                const mindays = parseInt(document.getElementById("min-days").value);
+                const maxdays = parseInt(document.getElementById("max-days").value);
+                if (mindays > maxdays || mindays < 1 || maxdays > 31)
+                    return alert("Min Days must be less than or equal to Max Days. Days must also be between 1 and 31.");
+                const minhrs = parseInt(document.getElementById("min-hrs").value);
+                const maxhrs = parseInt(document.getElementById("max-hrs").value);
+                if (minhrs > maxhrs || minhrs < 0 || maxhrs > 23)
+                    return alert("Min Hours must be less than or equal to Max Hours. Hours must also be between 0 and 23.");
+                const minmins = parseInt(document.getElementById("min-mins").value);
+                const maxmins = parseInt(document.getElementById("max-mins").value);
+                if (minmins > maxmins || minmins < 0 || maxmins > 59)
+                    return alert("Min Minutes must be less than or equal to Max Minutes. Minutes must also be between 0 and 59.");
+                const minsecs = parseInt(document.getElementById("min-secs").value);
+                const maxsecs = parseInt(document.getElementById("max-secs").value);
+                if (minsecs > maxsecs || minsecs < 0 || maxsecs > 59)
+                    return alert("Min Seconds must be less than or equal to Max Seconds. Seconds must also be between 0 and 59.");
+                // Search
+                searchSeed({ 
+                    gen: "4", 
+                    DPPt,
+                    HGSS,
+                    cores,
+                    tid: parseInt(document.getElementById("tid").value),
+                    sid: parseInt(document.getElementById("sid").value),
+                    months: `${minmonths}-${maxmonths}`,
+                    days: `${mindays}-${maxdays}`,
+                    delay: `${document.getElementById("min-delay").value}-${document.getElementById("max-delay").value}`,
+                    hours: `${minhrs}-${maxhrs}`,
+                    minutes: `${minmins}-${maxmins}`,
+                    seconds: `${minsecs}-${maxsecs}`,
+                });
+            }
+            function addMethod1() {}
+            function addMethodJ() {}
+            function addPKRS() {}
+        </script>
+    </body>
+</html>
