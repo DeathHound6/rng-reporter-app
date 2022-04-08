@@ -7,7 +7,13 @@ contextBridge.exposeInMainWorld('outgoing', {
     sendNotification: (title, body) => {
         ipcRenderer.send("sendNotification", title, body);
     },
-    searchSeed: (gen) => {
-        ipcRenderer.send("searchSeed", gen);
+    searchSeed: (info) => {
+        return ipcRenderer.invoke("searchSeed", info);
+    },
+    loadFile: (filename) => {
+        return ipcRenderer.invoke("loadFile", filename);
+    },
+    saveFile: (filename, data) => {
+        ipcRenderer.send("saveFile", filename, data);
     }
 });

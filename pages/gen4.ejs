@@ -21,10 +21,13 @@
             input[type="number"] {
                 width: 100%;
             }
+            #save, #load {
+                margin: 0%;
+            }
             button {
                 margin-left: 30%;
                 margin-right: 30%;
-                margin-top: 20%;
+                margin-top: 5%;
             }
         </style>
     </head>
@@ -112,7 +115,7 @@
             <div class="column">
                 <fieldset>
                     <legend>CPU Cores</legend>
-                    <label>CPU Cores</label> <input type="number" min="1" max="16" value="1" id="cores" required>
+                    <label>CPU Cores</label> <input type="number" min="1" max="32" value="1" id="cores" required>
                 </fieldset>
             </div>
             <div class="column"></div>
@@ -135,6 +138,14 @@
             </div>
             <div class="column"></div>
         </div>
+        <br/>
+        <div class="row">
+            <div>
+                <input type="text" id="filename" placeholder="Filename"><br/>
+                <button type="button" id="save" onclick="save();">Save</button><br/>
+                <button type="button" id="load" onclick="load();">Load</button>
+            </div>
+        </div>
 
         <script defer src="./js/scripts.js"></script>
         <script defer>
@@ -146,8 +157,8 @@
                 if (!DPPt && !HGSS)
                     return alert("Either DPPt or HGSS must be selected.");
                 const cores = parseInt(document.getElementById("cores").value);
-                if (1 > cores > 16)
-                    return alert("CPU Cores must be between 1 and 16.");
+                if (1 > cores > 32)
+                    return alert("CPU Cores must be between 1 and 32.");
                 const minmonths = parseInt(document.getElementById("min-months").value);
                 const maxmonths = parseInt(document.getElementById("max-months").value);
                 if (minmonths > maxmonths || minmonths < 1 || maxmonths > 12)
@@ -184,9 +195,60 @@
                     seconds: `${minsecs}-${maxsecs}`,
                 });
             }
-            function addMethod1() {}
-            function addMethodJ() {}
-            function addPKRS() {}
+            function toggleMethod1() {}
+            function toggleMethodJ() {}
+            function togglePKRS() {}
+
+            function save() {
+                const filename = document.getElementById("filename").value;
+                if (!filename)
+                    return alert("Please enter a filename.");
+                const data = {
+                    tid: parseInt(document.getElementById("tid").value),
+                    sid: parseInt(document.getElementById("sid").value),
+                    months: `${document.getElementById("min-months").value}-${document.getElementById("max-months").value}`,
+                    days: `${document.getElementById("min-days").value}-${document.getElementById("max-days").value}`,
+                    delay: `${document.getElementById("min-delay").value}-${document.getElementById("max-delay").value}`,
+                    hours: `${document.getElementById("min-hrs").value}-${document.getElementById("max-hrs").value}`,
+                    minutes: `${document.getElementById("min-mins").value}-${document.getElementById("max-mins").value}`,
+                    seconds: `${document.getElementById("min-secs").value}-${document.getElementById("max-secs").value}`,
+                    dppt: document.getElementById("DPPt").checked,
+                    hgss: document.getElementById("HGSS").checked,
+                    cores: parseInt(document.getElementById("cores").value),
+                    queries: []
+                };
+                if (!data.hgss && !data.dppt)
+                    return alert("Either DPPt or HGSS must be selected.");
+                window.outgoing.saveFile(filename, data);
+            }
+            function load() {
+                const filename = document.getElementById("filename").value;
+                if (!filename)
+                    return alert("Please enter a filename.");
+                window.outgoing.loadFile(filename).then(data => {
+                    document.getElementById("tid").value = data.tid;
+                    document.getElementById("sid").value = data.sid;
+                    document.getElementById("DPPt").checked = data.dppt;
+                    document.getElementById("HGSS").checked = data.hgss;
+                    document.getElementById("cores").value = data.cores;
+                    document.getElementById("min-months").value = data.months.split("-")[0];
+                    document.getElementById("max-months").value = data.months.split("-")[1];
+                    document.getElementById("min-days").value = data.days.split("-")[0];
+                    document.getElementById("max-days").value = data.days.split("-")[1];
+                    document.getElementById("min-delay").value = data.delay.split("-")[0];
+                    document.getElementById("max-delay").value = data.delay.split("-")[1];
+                    document.getElementById("min-hrs").value = data.hours.split("-")[0];
+                    document.getElementById("max-hrs").value = data.hours.split("-")[1];
+                    document.getElementById("min-mins").value = data.minutes.split("-")[0];
+                    document.getElementById("max-mins").value = data.minutes.split("-")[1];
+                    document.getElementById("min-secs").value = data.seconds.split("-")[0];
+                    document.getElementById("max-secs").value = data.seconds.split("-")[1];
+                    for (const query of data.queries) {
+
+                    }
+                    alert(`File '${filename}' loaded.`);
+                });
+            }
         </script>
     </body>
 </html>

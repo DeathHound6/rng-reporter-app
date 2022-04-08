@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Notification, dialog, ipcMain } = require("electron");
 const ejse = require("ejs-electron");
 const { execSync, exec } = require("child_process");
+const { existsSync, writeFileSync } = require("fs");
 let lastFile = null;
 
 const createWindow = (file) => {
@@ -30,6 +31,24 @@ app.whenReady().then(() => {
         ejse.data("searcherVersion", searcherVersion.split(" ")[searcherVersion.split(" ").length - 1]);
         ejse.data("appVersion", require("./package.json").version);
         createWindow("index.ejs");
+        
+        // Send specific requests from frontend
+        ipcMain.on("sendNotification", (event, title, body) => {
+            sendNotification(title, body);
+        });
+        ipcMain.on("createWindow", (event, file) => {
+            createWindow(file);
+        });
+        ipcMain.handle("searchSeed", (event, info) => {
+            searchSeed(info);
+        });
+        ipcMain.handle("loadFile", (event, filename) => {
+            return LoadFile(filename);
+        });
+        ipcMain.on("saveFile", (event, filename, data) => {
+            SaveFile(filename, data);
+        });
+
         // Start auto updater when ready
         require("update-electron-app")({
             updateInterval: "2 hours",
@@ -82,13 +101,28 @@ function searchSeed(info) {
     });
 }
 
-// Send specific requests from frontend
-ipcMain.on("sendNotification", (event, title, body) => {
-    sendNotification(title, body);
-});
-ipcMain.on("createWindow", (event, file) => {
-    createWindow(file);
-});
-ipcMain.on("searchSeed", (event, info) => {
-    searchSeed(info);
-});
+function LoadFile(filename) {
+    if (!filename.endsWith(".json")) 
+        filename = filename.trim() + ".json";
+    if (!existsSync(filename))
+        return dialog.showErrorBox("Error", `File '${filename}' does not exist`);
+    return require(`./${filename}`);
+}
+
+function SaveFile(filename, data) {
+    if (!filename.endsWith(".json")) 
+        filename = filename.trim() + ".json";
+    writeFileSync(filename, JSON.stringify(data, null, 4));
+    dialog.showMessageBox(BrowserWindow.getAllWindows()[0], {
+        type: "info",
+        title: "Saved",
+        detail: `Saved to '${filename}'`,
+        buttons: ["OK"]
+    });
+    // Make file backups
+    let x = 1;
+    while (existsSync(`${filename.split(".")[0]}_BACKUP${x}.json`))
+        x += 1;
+    filename = `${filename.split(".")[0]}_BACKUP${x}.json`;
+    writeFileSync(filename, JSON.stringify(data, null, 4));
+}
